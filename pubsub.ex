@@ -6,7 +6,7 @@ defmodule PubSub do
   defp loop(map) do
     receive do
       {:publish, topic, message} ->
-        IO.puts("topico: #{topic}")
+        IO.puts("New message in topic: #{topic}")
 
         workerList = Map.get(map, :"#{topic}")
         Enum.map(workerList, fn worker -> send(worker, {:"#{topic}", message}) end)
@@ -30,7 +30,7 @@ w1 =
   spawn(fn ->
     receive do
       {:create, msg} ->
-        IO.puts("Usuario criado: w1 #{inspect(msg)}")
+        IO.puts("User created: w1 #{inspect(msg)}")
         IO.puts(msg)
     end
   end)
@@ -39,11 +39,11 @@ w2 =
   spawn(fn ->
     receive do
       {:create, msg} ->
-        IO.puts("Usuario criado: w2 #{inspect(msg)}")
+        IO.puts("User created: w2 #{inspect(msg)}")
         IO.puts(msg)
 
       {:delete, msg} ->
-        IO.puts("Usuario deletado: w2 #{inspect(msg)}")
+        IO.puts("User deleted: w2 #{inspect(msg)}")
         IO.puts(msg)
     end
   end)

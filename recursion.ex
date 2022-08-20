@@ -1,22 +1,18 @@
 defmodule Recursion do
   def forEach(list, fun) do
-    Recursion.forEach(list, fun, 0)
+    forEach(list, fun, 0)
   end
 
-  def forEach(list, fun, index) do
-    if index < length(list) do
-      item = Enum.at(list, index)
-      fun.(item, index)
+  defp forEach(list, fun, index) when index < length(list) do
+    item = Enum.at(list, index)
+    fun.(item, index)
 
-      Recursion.forEach(list, fun, index + 1)
-    else
-      :ok
-    end
+    forEach(list, fun, index + 1)
   end
 
-  # def forEach(_, _, _) do
-  #   :ok
-  # end
+  defp forEach(_, _, _) do
+    :ok
+  end
 
   def acumulator([head | tail], total) do
     if head >= 2 do
@@ -31,9 +27,9 @@ defmodule Recursion do
   end
 end
 
-total = Recursion.acumulator([1, 2, 3], 0)
-IO.puts(total)
+# total = Recursion.acumulator()
+# IO.puts(total)
 
-# Recursion.forEach([1, 2, 3], fn item, index ->
-#   IO.puts("index: #{index} -> item: #{item}")
-# end)
+Recursion.forEach([1, 2, 3], fn item, index ->
+  IO.puts("index: #{index} -> item: #{item}")
+end)
