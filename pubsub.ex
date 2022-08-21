@@ -8,20 +8,17 @@ defmodule PubSub do
       {:publish, topic, message} ->
         IO.puts("New message in topic: #{topic}")
 
-        workerList = Map.get(map, :"#{topic}")
-        Enum.map(workerList, fn worker -> send(worker, {:"#{topic}", message}) end)
+        workerList = Map.get(map, topic)
+        Enum.map(workerList, fn worker -> send(worker, {topic, message}) end)
 
         loop(map)
 
       {:add, topic, newWorker} ->
-        case Map.get(map, :"#{topic}") do
-          nil ->
-            loop(Map.put(map, :"#{topic}", [newWorker]))
+        workers = Map.get(map, topic)
 
-          workers ->
-            listAllWorkers = List.flatten([workers] ++ [newWorker])
-            loop(Map.put(map, :"#{topic}", listAllWorkers))
-        end
+        if workers != nil,
+          do: loop(Map.put(map, topic, List.flatten(workers ++ [newWorker]))),
+          else: loop(Map.put(map, topic, [newWorker]))
     end
   end
 end
@@ -50,8 +47,8 @@ w2 =
 
 {:ok, pubSubPid} = PubSub.start_link()
 
-send(pubSubPid, {:add, "create", w1})
-send(pubSubPid, {:add, "create", w2})
-send(pubSubPid, {:add, "delete", w2})
+send(pubSubPid, {:add, :create, w1})
+send(pubSubPid, {:add, :create, w2})
+send(pubSubPid, {:add, :delete, w2})
 
-send(pubSubPid, {:publish, "create", "alandev"})
+send(pubSubPid, {:publish, :create, "alandev"})
